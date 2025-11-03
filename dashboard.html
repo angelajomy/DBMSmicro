@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMS - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h2>Hostel Management System</h2>
+        <div>
+            <span id="userRole"></span> | <button id="logoutBtn">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Admin Section -->
+        <div id="adminSection" class="role-section hidden">
+            <h3>Admin Panel</h3>
+            
+            <!-- Manage Students -->
+            <div class="module">
+                <h4>Manage Students</h4>
+                <button id="addStudentBtn">Add Student</button>
+                <form id="studentForm" class="hidden">
+                    <input type="hidden" id="studentId">
+                    <input type="text" id="studentName" placeholder="Name" required>
+                    <input type="email" id="studentEmail" placeholder="Email" required>
+                    <input type="tel" id="studentPhone" placeholder="Phone" required>
+                    <input type="date" id="studentAdmissionDate" required>
+                    <select id="studentRoomId">
+                        <option value="">No Room</option>
+                        <!-- Options loaded dynamically -->
+                    </select>
+                    <button type="submit">Save Student</button>
+                    <button type="button" id="cancelStudent">Cancel</button>
+                </form>
+                <table id="studentsTable">
+                    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Room</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Manage Rooms (Simple list; add form similar to students if needed) -->
+            <div class="module">
+                <h4>Rooms Overview</h4>
+                <table id="roomsTable">
+                    <thead><tr><th>ID</th><th>Room No</th><th>Capacity</th><th>Occupied</th><th>Status</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Reports -->
+            <div class="module">
+                <h4>Reports</h4>
+                <button id="loadPendingFees">Pending Fees</button>
+                <button id="loadOccupiedRooms">Occupied Rooms</button>
+                <div id="reportTable"></div>
+            </div>
+        </div>
+
+        <!-- Warden Section -->
+        <div id="wardenSection" class="role-section hidden">
+            <h3>Warden Panel</h3>
+            
+            <!-- Complaints -->
+            <div class="module">
+                <h4>Manage Complaints</h4>
+                <table id="complaintsTable">
+                    <thead><tr><th>ID</th><th>Student</th><th>Description</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- Visitors & Occupancy -->
+            <div class="module">
+                <h4>Visitor Logs & Occupancy</h4>
+                <button id="loadVisitors">Load Visitors</button>
+                <button id="loadOccupancy">Load Occupancy</button>
+                <div id="visitorsTable"></div>
+                <div id="occupancyTable"></div>
+            </div>
+        </div>
+
+        <!-- Student Section -->
+        <div id="studentSection" class="role-section hidden">
+            <h3>Student Portal</h3>
+            
+            <!-- Personal Details -->
+            <div class="module">
+                <h4>My Details</h4>
+                <div id="studentDetails"></div>
+            </div>
+
+            <!-- Fees -->
+            <div class="module">
+                <h4>My Fees</h4>
+                <button id="loadMyFees">Load Fees</button>
+                <div id="feesTable"></div>
+                <form id="payFeeForm" class="hidden">
+                    <input type="hidden" id="feeId">
+                    <input type="number" id="feeAmount" placeholder="Amount" step="0.01" required>
+                    <input type="date" id="feeDueDate" required>
+                    <button type="submit">Pay Fee</button>
+                </form>
+            </div>
+
+            <!-- Complaints -->
+            <div class="module">
+                <h4>Submit Complaint</h4>
+                <form id="complaintForm">
+                    <textarea id="complaintDesc" placeholder="Describe issue..." required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="myComplaints"></div>
+            </div>
+
+            <!-- Visitors -->
+            <div class="module">
+                <h4>Log Visitor</h4>
+                <form id="visitorForm">
+                    <input type="text" id="visitorName" placeholder="Visitor Name" required>
+                    <input type="text" id="visitorRelation" placeholder="Relation (e.g., Parent)" required>
+                    <input type="datetime-local" id="visitorInTime" required>
+                    <input type="datetime-local" id="visitorOutTime">
+                    <input type="date" id="visitorDate" required>
+                    <button type="submit">Log Entry</button>
+                </form>
+                <div id="myVisitors"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

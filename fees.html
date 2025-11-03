@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fees</title>
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<h1>Fees</h1>
+<button onclick="logout()">Logout</button>
+<div id="feesTable"></div>
+
+<script src="/static/js/script.js"></script>
+<script>
+function logout(){window.location.href='/logout'}
+
+fetch('/api/fees').then(r=>r.json()).then(d=>{
+    let html='<table><tr>';
+    if(d.length>0){ Object.keys(d[0]).forEach(k=>html+='<th>'+k+'</th>'); html+='</tr>';
+        d.forEach(r=>{ html+='<tr>'; Object.keys(r).forEach(k=>html+='<td>'+r[k]+'</td>'); html+='</tr>';})
+    }
+    html+='</table>'; document.getElementById('feesTable').innerHTML=html;
+})
+</script>
+</body>
+</html>

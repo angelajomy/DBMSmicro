@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login - HMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="auth-card">
+        <h2>Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="POST" action="/login">
+            <label>Email / Username</label>
+            <input type="email" name="email" required>
+            <label>Password</label>
+            <input type="password" name="password" required>
+            <label>Role</label>
+            <select name="role" required>
+                <option value="">-- Select role --</option>
+                <option value="student">Student</option>
+                <option value="warden">Warden</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <p>Don't have a student account? <a href="/register_page">Register here</a></p>
+    </div>
+</body>
+</html>

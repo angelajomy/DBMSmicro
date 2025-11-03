@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Admin Dashboard - HMS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Admin Dashboard</h1>
+        <div class="header-actions">
+            <span class="who">Welcome, {{ session['name'] }}</span>
+            <a class="btn small" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>Students</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Room</th></tr></thead>
+                <tbody>
+                {% for s in students %}
+                    <tr>
+                        <td>{{ s.student_id }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.email }}</td>
+                        <td>{{ s.phone }}</td>
+                        <td>{{ s.room_no or 'N/A' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Rooms</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Room No</th><th>Capacity</th><th>Occupied</th><th>Status</th><th>Block</th></tr></thead>
+                <tbody>
+                {% for r in rooms %}
+                    <tr>
+                        <td>{{ r.room_id }}</td>
+                        <td>{{ r.room_no }}</td>
+                        <td>{{ r.capacity }}</td>
+                        <td>{{ r.occupied_beds }}</td>
+                        <td>{{ r.status }}</td>
+                        <td>{{ r.block }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Complaints</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Student</th><th>Description</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+                <tbody id="complaintsBody">
+                {% for c in complaints %}
+                    <tr>
+                        <td>{{ c.complaint_id }}</td>
+                        <td>{{ c.student_name }}</td>
+                        <td>{{ c.description }}</td>
+                        <td>{{ c.status }}</td>
+                        <td>{{ c.date_submitted }}</td>
+                        <td>
+                            <button class="btn small" onclick="updateComplaint({{ c.complaint_id }}, 'InProgress')">Mark InProgress</button>
+                            <button class="btn small" onclick="updateComplaint({{ c.complaint_id }}, 'Resolved')">Resolve</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Fees</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Student</th><th>Amount</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="feesBody">
+                {% for f in fees %}
+                    <tr>
+                        <td>{{ f.fee_id }}</td>
+                        <td>{{ f.student_id }}</td>
+                        <td>{{ f.amount }}</td>
+                        <td>{{ f.due_date }}</td>
+                        <td>{{ f.status }}</td>
+                        <td>
+                            {% if f.status != 'Paid' %}
+                            <button class="btn small" onclick="markFeePaid({{ f.fee_id }})">Mark Paid</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Visitors</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Student</th><th>Name</th><th>Relation</th><th>In</th><th>Out</th></tr></thead>
+                <tbody>
+                {% for v in visitors %}
+                    <tr>
+                        <td>{{ v.visitor_id }}</td>
+                        <td>{{ v.student_name }}</td>
+                        <td>{{ v.name }}</td>
+                        <td>{{ v.relation }}</td>
+                        <td>{{ v.in_time }}</td>
+                        <td>{{ v.out_time or '-' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Wardens</h2>
+            <table class="data-table">
+                <thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Block</th></tr></thead>
+                <tbody>
+                {% for w in wardens %}
+                    <tr>
+                        <td>{{ w.warden_id }}</td>
+                        <td>{{ w.name }}</td>
+                        <td>{{ w.contact }}</td>
+                        <td>{{ w.assigned_block }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+<script>
+async function updateComplaint(id, status){
+    const res = await fetch('/api/admin/complaints', {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({complaint_id:id, status:status})
+    });
+    const j = await res.json();
+    alert(j.message || j);
+    location.reload();
+}
+
+async function markFeePaid(fee_id){
+    const res = await fetch('/api/admin/fees', {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({fee_id: fee_id, status: 'Paid'})
+    });
+    const j = await res.json();
+    alert(j.message || j);
+    location.reload();
+}
+</script>
+
+</body>
+</html>
